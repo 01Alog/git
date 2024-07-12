@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getData, postData } from "./pages/home/api";
-import "./App.css";
+import { getPopularMovies } from "./api";
+import { Link } from "react-router-dom";
+import "./Home.css";
 
-const App = () => {
-  const [data, setData] = useState(null);
+const Home = () => {
+  const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMovies = async () => {
       try {
-        const result = await getData();
-        setData(result);
+        const result = await getPopularMovies();
+        setMovies(result.results);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -19,17 +20,8 @@ const App = () => {
       }
     };
 
-    fetchData();
+    fetchMovies();
   }, []);
-
-  const handlePostData = async () => {
-    try {
-      const result = await postData({ key: "value" }); // Reemplaza con los datos que deseas enviar
-      console.log("Post response:", result);
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
-  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -41,11 +33,24 @@ const App = () => {
 
   return (
     <div>
-      <h1>Data from API</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-      <button onClick={handlePostData}>Post Data</button>
+      <h1>Popular Movies</h1>
+      <ul className="movie-list">
+        {movies.map((movie) => (
+          <li key={movie.id} className="movie-item">
+            <Link to={`/movie/${movie.id}`}>
+              <h2>{movie.title}</h2>
+            </Link>
+            <img
+              src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+              alt={movie.title}
+            />
+            <p>Release Date: {movie.release_date}</p>
+            <p>{movie.overview}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default App;
+export default Home;

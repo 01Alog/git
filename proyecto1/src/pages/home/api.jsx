@@ -1,30 +1,24 @@
 import axios from "axios";
 
-const API_URL = "https://api.example.com"; // Reemplaza con la URL de tu API
+const API_URL = "https://api.themoviedb.org/3";
+const API_KEY = "472b425481163a17f782694e83a78ed3";
+const ACCESS_TOKEN =
+  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0NzJiNDI1NDgxMTYzYTE3Zjc4MjY5NGU4M2E3OGVkMyIsIm5iZiI6MTcyMDc3Mjk3MS4wOTI1MTIsInN1YiI6IjY2OTBlODRlNjM0Mjc4YTA4ZDhiMzU2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.1S2-t5Sh3IZi2_0zq6lHwvSrELOi4cK8vTwXUxiF8J4";
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${ACCESS_TOKEN}`,
   },
 });
 
-export const getData = async () => {
+export const getPopularMovies = async () => {
   try {
-    const response = await api.get("/endpoint"); // Reemplaza '/endpoint' con el endpoint de tu API
+    const response = await api.get(`/movie/popular?api_key=${API_KEY}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error;
-  }
-};
-
-export const postData = async (data) => {
-  try {
-    const response = await api.post("/endpoint", data); // Reemplaza '/endpoint' con el endpoint de tu API
-    return response.data;
-  } catch (error) {
-    console.error("Error posting data:", error);
     throw error;
   }
 };
